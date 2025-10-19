@@ -234,18 +234,18 @@ export  const Templates=  [
     ],
   },
   {
-    name: "English Grammer Check",
+    name: "English Grammar Check",
     desc: "An AI tool that identifies and corrects grammar errors in your text, improving the clarity and professionalism of your writing for better communication.",
     icon: "https://cdn-icons-png.flaticon.com/128/12596/12596700.png",
     category: "english",
 
-    slug: "english-grammer-checker",
+    slug: "english-grammar-checker",
     aiPrompt:
-      "Rewrite the inputText by correcting the grammer and give output in  in rich text editor format",
+      "You are a professional grammar correction tool. Correct any grammar, spelling, or punctuation errors in the inputText. Only return the corrected text without any explanations, JSON formats, or additional commentary. Format the output using proper markdown for any headings, lists, or paragraph structure that might be present in the original text.",
     form: [
       {
-        label: "Enter text to correct the grammer",
-        field: "input",
+        label: "Enter text to correct the grammar",
+        field: "textarea",
         name: "inputText",
         required: true,
       },

@@ -5,6 +5,8 @@ import { createContext, Dispatch, SetStateAction } from "react";
 interface TotalUsageContextType {
   totalUsage: number;
   setTotalUsage: Dispatch<SetStateAction<number>>;
+  userSubscription: boolean;
+  setUserSubscription: Dispatch<SetStateAction<boolean>>;
 }
  
 export const TotalUsageContext = createContext<TotalUsageContextType | null>(null);

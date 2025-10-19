@@ -6,6 +6,7 @@ import {
 } from "../(context)/TotalUsageContext";
 import Header from "./_components/Header";
 import SideBar from "./_components/SideBar";
+import { User } from "lucide-react";
 
 export default function RootLayout({
   children,
@@ -17,7 +18,7 @@ export default function RootLayout({
 
   return (
     <SideBarContext.Provider value={{ isSidebarOpen, setIsSidebarOpen }}>
-      <TotalUsageContext.Provider value={{ totalUsage, setTotalUsage }}>
+      <TotalUsageContext.Provider value={{ totalUsage, setTotalUsage, userSubscription: false, setUserSubscription: () => {} }}>
         <div className="flex bg-slate-100 min-h-screen">
           {isSidebarOpen && (
             <div className="md:w-64 fixed w-[60%] z-30">

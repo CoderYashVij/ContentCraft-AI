@@ -16,7 +16,7 @@ export async function saveAIContentToDB(
       slug: slug || "",
       aiResponse: aiResponse || "",
       createdBy: userEmail || "Unknown",
-      createAt: moment().format("YYYY-MM-DD"),
+      createAt: moment().format("YYYY-MM-DD HH:mm:ss"),
     });
     
     return { success: true };

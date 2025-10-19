@@ -2,16 +2,40 @@
 
 import { chatSession } from "@/utils/ai";
 import { Templates } from "@/data/data";
-import { TOTLAL_WORDS } from "../dashboard/_components/UpgradeTrack";
+import { TOTAL_WORDS } from "../dashboard/_components/UpgradeTrack";
+import { db } from "@/utils/db";
+import { UserSubscription } from "@/utils/schema";
+import { eq } from "drizzle-orm";
+
+// Helper function to check if a user has an active subscription
+async function checkUserSubscription(email: string): Promise<boolean> {
+  if (!email) return false;
+  
+  try {
+    const subscriptions = await db
+      .select()
+      .from(UserSubscription)
+      .where(eq(UserSubscription.email, email));
+    
+    return subscriptions.length > 0 && subscriptions[0].active === true;
+  } catch (error) {
+    console.error("Error checking subscription status:", error);
+    return false;
+  }
+}
 
 export async function generateAIContent(
   formData: any,
   slug: string,
-  currentUsage: number
+  currentUsage: number,
+  userEmail: string
 ) {
   try {
-    // Check usage limits
-    if (currentUsage >= TOTLAL_WORDS) {
+    // Check if user is subscribed (has premium)
+    const isSubscribed = await checkUserSubscription(userEmail);
+    
+    // Only check usage limits if user is not subscribed
+    if (!isSubscribed && currentUsage >= TOTAL_WORDS) {
       return {
         success: false,
         error: "usage_limit_reached",

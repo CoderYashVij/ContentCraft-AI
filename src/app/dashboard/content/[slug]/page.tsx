@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
 import { useRouter } from "next/navigation";
-import { TOTLAL_WORDS } from "../../_components/UpgradeTrack";
+import { TOTAL_WORDS } from "../../_components/UpgradeTrack";
 import { generateAIContent } from "@/app/actions/contentActions";
 import { saveAIContentToDB } from "@/app/actions/dbActions";
 
@@ -33,11 +33,8 @@ const CreateContent = (props: IProps) => {
 
   const handleFormSubmit = async (formData: any) => {
     try {
-      // if (totalUsage >= TOTLAL_WORDS) {
-      //   alert("You have reached your usage limit. Please upgrade your account.");
-      //   router.push("/dashboard/billing");
-      //   return;
-      // }
+      // We'll let the server action handle usage checking now
+      // based on subscription status
 
       setLoading(true);
 
@@ -45,12 +42,14 @@ const CreateContent = (props: IProps) => {
       const response = await generateAIContent(
         formData,
         props.params.slug,
-        totalUsage
+        totalUsage,
+        user?.primaryEmailAddress?.emailAddress || ""
       );
 
       if (!response.success) {
         if (response.error === "usage_limit_reached") {
-          router.push("/dashboard/billing");
+          alert("You have reached your usage limit. Please upgrade your account.");
+          router.push("/dashboard/pricing");
           return;
         }
         throw new Error(response.error || "Failed to generate content");

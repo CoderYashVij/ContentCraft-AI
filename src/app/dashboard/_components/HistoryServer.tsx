@@ -2,7 +2,7 @@
 
 import { db } from "@/utils/db";
 import { AIOutput } from "@/utils/schema";
-import { desc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { ITemplate } from "../_components/TemplateList";
 import { Templates } from "@/data/data";
 
@@ -12,5 +12,5 @@ export async function fetchHistory(userEmail: string) {
     .select()
     .from(AIOutput)
     .where(eq(AIOutput.createdBy, userEmail))
-    .orderBy(desc(AIOutput.id));
+    .orderBy(asc(AIOutput.createAt));
 }
