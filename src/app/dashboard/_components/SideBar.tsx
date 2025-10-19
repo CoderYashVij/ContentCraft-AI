@@ -20,12 +20,7 @@ const SideBar: React.FC = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);
 
   const sidebarContext = useContext(SideBarContext);
-
-  if (!sidebarContext) {
-    return <div>Loading...</div>;
-  }
-
-  const { isSidebarOpen, setIsSidebarOpen }: any = sidebarContext;
+  const { isSidebarOpen, setIsSidebarOpen }: any = sidebarContext || { isSidebarOpen: false, setIsSidebarOpen: () => {} };
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,6 +32,10 @@ const SideBar: React.FC = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+  
+  if (!sidebarContext) {
+    return <div>Loading...</div>;
+  }
 
   const handleMenuClick = (path: string) => {
     router.push(path);

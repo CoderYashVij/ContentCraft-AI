@@ -98,7 +98,7 @@ const Pricing = () => {
         // name: user.name,
       });
       
-      console.log("Subscription created:", response.data);
+      // Subscription created successfully
       
       if (response.data && response.data.result && response.data.result.id) {
         // Pass the subscription ID to the payment function
@@ -130,12 +130,12 @@ const Pricing = () => {
         ondismiss: function() {
           // Handle payment modal dismiss
           setLoadingPlan(null);
-          console.log("Payment cancelled by user");
+          // Payment cancelled by user
         }
       },
       handler: async (response: any) => {
         try {
-          console.log("Payment successful:", response);
+          // Payment successful
            if(response){
             await SaveSubscription(response?.razorpay_payment_id);
            }
@@ -186,7 +186,7 @@ const Pricing = () => {
         })
         .where(eq(UserSubscription.email, userEmail));
         
-      console.log("Updated existing subscription:", result);
+      // Updated existing subscription
     } else {
       // Insert new subscription record
       result = await db.insert(UserSubscription).values({
@@ -196,7 +196,7 @@ const Pricing = () => {
         paymentId: paymentId,
         joinDate: moment().format("YYYY-MM-DD HH:mm:ss"),
       });
-      console.log("Created new subscription:", result);
+      // Created new subscription
     }
     
     if(result){

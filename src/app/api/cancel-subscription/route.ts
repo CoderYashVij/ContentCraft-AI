@@ -35,7 +35,7 @@ export async function POST(req: Request) {
         // Cancel subscription in Razorpay
         await instance.subscriptions.cancel(subscription.paymentId);
       } catch (razorpayError) {
-        console.error('Error canceling Razorpay subscription:', razorpayError);
+        console.error('Error canceling Razorpay subscription');
         // Continue with database update even if Razorpay fails
       }
     }
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, message: 'Subscription canceled successfully' });
   } catch (error) {
-    console.error('Error canceling subscription:', error);
+    console.error('Error canceling subscription');
     return NextResponse.json(
       { success: false, message: 'Failed to cancel subscription' },
       { status: 500 }

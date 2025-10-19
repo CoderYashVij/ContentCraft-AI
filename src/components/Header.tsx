@@ -21,9 +21,9 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="mx-auto flex h-16 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
-        <Link className="block text-mainColor" href="/">
+    <header className="bg-white shadow-md py-2">
+      <div className="mx-auto flex h-20 max-w-screen-xl items-center gap-8 px-4 sm:px-6 lg:px-8">
+        <Link className="block text-mainColor scale-110" href="/">
         
           <Logo/>
          
@@ -38,37 +38,37 @@ const Header: React.FC = () => {
               isMobileMenuOpen ? "block" : "hidden"
             }`}
           >
-            <ul className="flex items-center gap-6 text-sm">
+            <ul className="flex items-center gap-8 text-base font-medium">
               <li>
                 <a
-                  className="text-gray-500 transition hover:text-gray-500/75"
-                  href="#"
+                  className="text-gray-700 transition hover:text-mainColor"
+                  href="/dashboard"
                 >
-                  About
+                  Dashboard
                 </a>
               </li>
               <li>
                 <a
-                  className="text-gray-500 transition hover:text-gray-500/75"
-                  href="#"
-                >
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a
-                  className="text-gray-500 transition hover:text-gray-500/75"
-                  href="#"
+                  className="text-gray-700 transition hover:text-mainColor"
+                  href="/dashboard/history"
                 >
                   History
                 </a>
               </li>
               <li>
                 <a
-                  className="text-gray-500 transition hover:text-gray-500/75"
-                  href="#"
+                  className="text-gray-700 transition hover:text-mainColor"
+                  href="/dashboard/pricing"
                 >
-                  Services
+                  Pricing
+                </a>
+              </li>
+              <li>
+                <a
+                  className="text-gray-700 transition hover:text-mainColor"
+                  href="/dashboard/profile"
+                >
+                  Settings
                 </a>
               </li>
             </ul>
@@ -77,18 +77,22 @@ const Header: React.FC = () => {
           {/* Desktop & Mobile Buttons */}
           <div className="flex items-center gap-4">
             {user ? (
-              <UserButton />
+              <UserButton appearance={{
+                elements: {
+                  avatarBox: "w-12 h-12" // Make user avatar bigger
+                }
+              }} />
             ) : (
               <div className="sm:flex sm:gap-4">
                 <button
                   onClick={handleSignIn}
-                  className="block rounded-md bg-mainColor px-5 py-2.5 text-sm font-medium text-white transition hover:bg-mainColor-dark"
+                  className="block rounded-md bg-mainColor px-6 py-3 text-base font-bold text-white transition hover:bg-mainColor/90 shadow-md"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={handleSignUp}
-                  className="hidden rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-text-mainColor transition hover:text-text-mainColor-dark sm:block"
+                  className="hidden rounded-md bg-gray-100 px-6 py-3 text-base font-bold text-mainColor transition hover:bg-gray-200 shadow-sm sm:block"
                 >
                   Sign Up
                 </button>
@@ -97,7 +101,7 @@ const Header: React.FC = () => {
 
             {/* Mobile Menu Toggle Button */}
             <button
-              className="block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden"
+              className="block rounded bg-gray-100 p-3 text-gray-700 transition hover:text-mainColor md:hidden"
               onClick={toggleMobileMenu}
             >
               <span className="sr-only">Toggle menu</span>
@@ -129,15 +133,7 @@ const Header: React.FC = () => {
                 className="text-gray-500 transition hover:text-gray-500/75"
                 href="#"
               >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-gray-500 transition hover:text-gray-500/75"
-                href="#"
-              >
-                Careers
+                Dashboard
               </a>
             </li>
             <li>
@@ -153,7 +149,15 @@ const Header: React.FC = () => {
                 className="text-gray-500 transition hover:text-gray-500/75"
                 href="#"
               >
-                Services
+                Pricing
+              </a>
+            </li>
+            <li>
+              <a
+                className="text-gray-500 transition hover:text-gray-500/75"
+                href="#"
+              >
+                Settings
               </a>
             </li>
           </ul>

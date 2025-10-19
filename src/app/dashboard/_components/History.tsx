@@ -16,10 +16,6 @@ const HistoryClient: React.FC<HistoryProps> = ({ initialHistoryList }) => {
   const [historyList, setHistoryList] = useState<any[]>(initialHistoryList);
   const [userEmail, setUserEmail] = useState<string>("");
   const [toast, setToast] = useState<{ visible: boolean, message: string }>({ visible: false, message: "" });
-
-  if(!isSignedIn){
-    return null;
-  }
   
   const showToast = (message: string) => {
     setToast({ visible: true, message });
@@ -39,8 +35,14 @@ const HistoryClient: React.FC<HistoryProps> = ({ initialHistoryList }) => {
       }
     };
     
-    fetchData();
-  }, [user]);
+    if (isSignedIn) {
+      fetchData();
+    }
+  }, [user, isSignedIn]);
+  
+  if (!isSignedIn) {
+    return null;
+  }
 
   const getTemplateInfo = (slug: string) => {
     const template = Templates.find((item: { slug: string }) => item.slug === slug);
