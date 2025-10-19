@@ -160,14 +160,45 @@ const Pricing = () => {
   };
 
   const SaveSubscription = async (paymentId: string) => {
-    const result = await db.insert(UserSubscription).values({
-      email:user?.primaryEmailAddress?.emailAddress,
-      username: user?.fullName,
-      active:true,
-      paymentId: paymentId,
-      joinDate: moment().format("YYYY-MM-DD HH:mm:ss"),
-    });
-    console.log(result);
+    // Ensure email exists before proceeding
+    const userEmail = user?.primaryEmailAddress?.emailAddress;
+    if (!userEmail) {
+      alert("User email not found. Please try again or contact support.");
+      return;
+    }
+    
+    // First check if a subscription already exists for this user
+    const existingSubscriptions = await db
+      .select()
+      .from(UserSubscription)
+      .where(eq(UserSubscription.email, userEmail));
+      
+    let result;
+    
+    if (existingSubscriptions && existingSubscriptions.length > 0) {
+      // Update existing subscription record
+      result = await db
+        .update(UserSubscription)
+        .set({
+          active: true,
+          paymentId: paymentId,
+          joinDate: moment().format("YYYY-MM-DD HH:mm:ss"),
+        })
+        .where(eq(UserSubscription.email, userEmail));
+        
+      console.log("Updated existing subscription:", result);
+    } else {
+      // Insert new subscription record
+      result = await db.insert(UserSubscription).values({
+        email: userEmail,
+        username: user?.fullName || "Unknown User",
+        active: true,
+        paymentId: paymentId,
+        joinDate: moment().format("YYYY-MM-DD HH:mm:ss"),
+      });
+      console.log("Created new subscription:", result);
+    }
+    
     if(result){
       alert("Subscription successful! Welcome to Pro plan.");
       window.location.reload();

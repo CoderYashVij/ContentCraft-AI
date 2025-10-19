@@ -144,12 +144,6 @@ const UpgradeTrack = () => {
             }`}>
               {isSubscribed ? "Pro" : "Starter"}
             </span>
-            {/* Hidden in production, visible only for debugging */}
-            {process.env.NODE_ENV === "development" && (
-              <span className="text-xs text-gray-400 mt-1">
-                Last checked: {new Date(lastChecked).toLocaleTimeString()}
-              </span>
-            )}
           </div>
         </div>
         
