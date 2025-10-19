@@ -34,7 +34,7 @@ const TemplateList = ({ userSearchInput }: any) => {
   return (
     <div className=" grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5    ">
       {templeteList.map((item:any, index: number) => (
-        <TempleteCard {...item} />
+        <TempleteCard key={item.slug || index} {...item} />
       ))}
     </div>
   );

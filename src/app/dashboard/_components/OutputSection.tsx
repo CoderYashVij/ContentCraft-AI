@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+// @ts-ignore
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
  

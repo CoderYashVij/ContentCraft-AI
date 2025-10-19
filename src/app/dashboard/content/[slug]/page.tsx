@@ -7,14 +7,12 @@ import { Templates } from "@/data/data";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { chatSession } from "@/utils/ai";
-import { db } from "@/utils/db";
-import { AIOutput } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
-import moment from "moment";
 import { TotalUsageContext } from "@/app/(context)/TotalUsageContext";
 import { useRouter } from "next/navigation";
 import { TOTLAL_WORDS } from "../../_components/UpgradeTrack";
+import { generateAIContent } from "@/app/actions/contentActions";
+import { saveAIContentToDB } from "@/app/actions/dbActions";
 
 interface IProps {
   params: {
@@ -33,52 +31,52 @@ const CreateContent = (props: IProps) => {
     (item) => item.slug === props.params.slug
   );
 
-  const generateAIContent = async (formData: any) => {
+  const handleFormSubmit = async (formData: any) => {
     try {
-      if (totalUsage >= TOTLAL_WORDS) {
-        alert("You have reached your usage limit. Please upgrade your account.");
-        router.push("/dashboard/billing");
-        return;
-      }
+      // if (totalUsage >= TOTLAL_WORDS) {
+      //   alert("You have reached your usage limit. Please upgrade your account.");
+      //   router.push("/dashboard/billing");
+      //   return;
+      // }
 
       setLoading(true);
 
-      const selectedPrompt = selectedTemplate?.aiPrompt; // FIX: Corrected the property name
-      const finalAIPrompt = JSON.stringify(formData) + ", " + selectedPrompt;
+      // Call server action to generate content
+      const response = await generateAIContent(
+        formData,
+        props.params.slug,
+        totalUsage
+      );
 
-      const result = await chatSession.sendMessage(finalAIPrompt);
-      const aiResponseText = await result.response.text();
+      if (!response.success) {
+        if (response.error === "usage_limit_reached") {
+          router.push("/dashboard/billing");
+          return;
+        }
+        throw new Error(response.error || "Failed to generate content");
+      }
 
-      setAIResult(aiResponseText);
+      setAIResult(response.result);
 
-      await saveToDB(formData, selectedTemplate?.slug, aiResponseText, user);
+      // Save to database
+      if (user) {
+        await saveAIContentToDB(
+          formData,
+          props.params.slug,
+          response.result,
+          user.primaryEmailAddress?.emailAddress || "Unknown"
+        );
+      }
+
+      // Update usage count
+      const newWordCount = response.result.split(' ').length;
+      setTotalUsage((prev: number) => prev + newWordCount);
+      
     } catch (error) {
-      console.error("Error generating AI content:", error);
+      console.error("Error:", error);
       alert("An error occurred while generating content.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const saveToDB = async (
-    formData: any,
-    slug: string | undefined,
-    aiResponse: string,
-    user: any
-  ) => {
-    try {
-      if (user) {
-        await db.insert(AIOutput).values({
-          formData: formData || "",
-          slug: slug || "",
-          aiResponse: aiResponse || "",
-          createdBy: user.primaryEmailAddress?.emailAddress || "Unknown",
-          createAt: moment().format("YYYY-MM-DD"),
-        });
-      }
-    } catch (error) {
-      console.error("Error saving AI content to DB:", error);
-      alert("An error occurred while saving the content.");
     }
   };
 
@@ -93,10 +91,10 @@ const CreateContent = (props: IProps) => {
         <FromSection
           loading={loading}
           selectedTemplate={selectedTemplate}
-          userFormInput={(formData: any) => generateAIContent(formData)}
+          userFormInput={(formData: any) => handleFormSubmit(formData)}
         />
         <div className="col-span-2 mt-5 sm:mt-0">
-          <OutputSection AIResult={AIResult} /> {/* FIX: Passed correct prop */}
+          <OutputSection AIResult={AIResult} /> 
         </div>
       </div>
     </div>
